@@ -2,7 +2,9 @@
   Напишите функцию, которая принимает 1 аргумент и возварщает его тип
 */
 function getDataType(variable) {
-
+  if (arguments.length === 1) return typeof variable;
+  console.log ('this function expects exactly ONE argument');
+  return;
 }
 
 /*
@@ -14,7 +16,25 @@ function getDataType(variable) {
   'object-function' - если функция
 */
 function getDataTypePseudoName(variable) {
-
+  if (arguments.length !== 1) return 'this function expects exactly ONE argument';
+  if (variable && variable.constructor.name) {
+    switch (variable.constructor.name) {
+      case 'String':
+      case 'Number':
+      case 'Boolean':
+        return 'primitive';
+      
+      case 'Object':
+        return 'object';
+      
+      case 'Array':
+        return 'object-array';
+      
+      case 'Function':
+        return 'object-function';
+    }
+  }
+  return 'primitive-special';
 }
 
 
@@ -25,7 +45,15 @@ function getDataTypePseudoName(variable) {
   и -1 в другом случае
 */
 function compareByType(a, b) {
-
+  if (arguments.length !== 2) return 'this function expects exactly TWO arguments';
+  switch ((a === b) + (a == b)) {
+    case 2:
+      return 1;
+    case 1:
+      return 0;
+    default:
+      return -1;
+  }
 }
 
 // Numbers
@@ -37,7 +65,9 @@ function compareByType(a, b) {
   в любом другом случае возврвщвет -1
 */
 function increase(value) {
-
+  if (arguments.length !== 1) return 'this function expects exactly ONE argument';
+  if (value.constructor.name == 'Number' && isFinite(value)) return value+1;
+  return -1;  
 }
 
 /*
@@ -45,7 +75,11 @@ function increase(value) {
   и в случае если аргумент не Infinity или NaN возвращает строку 'safe' иначе 'danger'
 */
 function testForSafeNumber(value) {
-
+  if (arguments.length !== 1 || value.constructor.name !== 'Number') return 'this function expects exactly ONE Number argument';
+  if (isFinite(value)) {
+    return 'safe';
+  }
+  return 'danger';
 }
 
 
@@ -57,7 +91,10 @@ function testForSafeNumber(value) {
   и возвращает массив из елементов строки разделенных по пробелу ' '
 */
 function stringToArray(str) {
-
+  if (arguments.length !== 1 || str.constructor.name !== 'String') return 'this function expects exactly ONE String argument';
+  if (!str) return 'empty string is not allowed';
+  const arr = str.trim().split(/\s+/);
+  return arr;
 }
 
 
@@ -66,7 +103,12 @@ function stringToArray(str) {
   и возвращает часть этой строки до первой запятой
 */
 function getStringPart(str) {
-
+  if (arguments.length !== 1 || str.constructor.name !== 'String') return 'this function expects exactly ONE String argument';
+  if (!str) return 'empty string is not allowed';
+  if (str.indexOf(',') === -1) return 'string without coma, nothing to do';
+  const firstComaPosition = str.indexOf(',');
+  const newString = str.substring(0, firstComaPosition);
+  return newString;
 }
 
 /*
@@ -75,7 +117,13 @@ function getStringPart(str) {
   false в противоположном случае
 */
 function isSingleSymbolMatch(str, symbol) {
-
+  if (arguments.length !== 2) return 'this function expects exactly TWO String arguments';
+  if (!str || !symbol || str.constructor.name !== 'String' || symbol.constructor.name !== 'String') {
+    return 'non-empty strings are required as arguments';
+  }
+  const re = new RegExp(symbol, "g");
+  if (str.match(re).length === 1) return (str.indexOf(symbol));
+  return false;
 }
 
 /*
@@ -85,7 +133,11 @@ function isSingleSymbolMatch(str, symbol) {
   или строку разделенную "-" если не задан
 */
 function join(array, separator) {
-
+  if (arguments.length !== 2) return 'this function expects exactly TWO arguments';
+  if (!array || array.constructor.name !== 'Array' || separator.constructor.name !== 'String') {
+    return 'non-empty array to join and string as separator are required as arguments';
+  }
+  return array.join(separator || '-');
 }
 
 
@@ -94,7 +146,11 @@ function join(array, separator) {
   и возвращает один состоящий из элементов перового и второго (последовательно сначала первый потом второй)
 */
 function glue(arrA, arrB) {
-
+  if (arguments.length !== 2) return 'this function expects exactly TWO arguments';
+  if (arrA.constructor.name !== 'Array' || arrB.constructor.name !== 'Array') {
+    return 'arrays are required as arguments';
+  }  
+  return arrA.concat(arrB);
 }
 
 
@@ -103,7 +159,13 @@ function glue(arrA, arrB) {
   и возвращает другой массив отсортированный от большего к меньшему
 */
 function order(arr) {
-
+  if (arguments.length !== 1) return 'this function expects exactly ONE argument';
+  if (arr.constructor.name !== 'Array' || arr.length === 0) {
+    return 'non-empty array is required as argument';
+  } 
+  return arr.sort((a,b) => {
+    return a < b;
+  });
 }
 
 
@@ -112,7 +174,20 @@ function order(arr) {
   и возвращает другой без чисел которые меньше 0
 */
 function removeNegative(arr) {
-
+  if (arguments.length !== 1) return 'this function expects exactly ONE argument';
+  if (arr.constructor.name !== 'Array' || arr.length === 0) {
+    return 'non-empty array is required as argument';
+  }
+  const filteredArr = [];
+  for (let i=0; i<arr.length; i++) {
+    if (arr[i].constructor.name === 'Number' && !Number.isNaN(arr[i])) {
+      if (arr[i] >= 0) {
+        filteredArr.push(arr[i]);
+      }
+    }
+    else filteredArr.push(arr[i]);
+  }
+  return filteredArr;
 }
 
 /*
@@ -122,7 +197,19 @@ function removeNegative(arr) {
   [1,2,3], [1, 3] => [2]
 */
 function without(arrA, arrB) {
-
+  if (arguments.length !== 2) return 'this function expects exactly TWO arguments';
+  if (arrA.constructor.name !== 'Array' || arrB.constructor.name !== 'Array') {
+    return 'arrays are required as arguments';
+  } 
+  const filteredArrA = [];
+  arrA.forEach((a) => {
+    let criterion = 0;
+    arrB.forEach((b) => {
+      criterion += (a === b);
+    });
+    if (!criterion) filteredArrA.push(a);
+  });
+  return filteredArrA;
 }
 
 /*
@@ -133,7 +220,18 @@ function without(arrA, arrB) {
   '12/6' => 2
 */
 function calcExpression(expression) {
-
+  if (!expression) return 'this function expects string of mathematical expression';
+  const re = /\*|\/|\+|\-/;
+  const operator = expression.match(re)[0];
+  const operands = expression.split(operator);
+  if (operands.length !== 2) return 'this function expects string of mathematical expression with 2 operands';
+  const calcul = {
+    '+': function (operands) { return Number(operands[0]) + Number(operands[1]) },
+    '-': function (operands) { return Number(operands[0]) - Number(operands[1]) },
+    '/': function (operands) { return Number(operands[0]) / Number(operands[1]) },
+    '*': function (operands) { return Number(operands[0]) * Number(operands[1]) }
+  };
+  return calcul[operator](operands);
 }
 
 /*
@@ -145,7 +243,20 @@ function calcExpression(expression) {
   '100>5' => true
 */
 function calcComparison(expression) {
-
+  if (!expression) return 'this function expects string of logical expression';
+  const regex = />=|<=|>|<|=/;
+  const operator = expression.match(regex)[0];
+  const operands = expression.split(operator);
+  if (operands.length !== 2) return 'this function expects string of logical expression with 2 operands';
+  if (!isFinite(operands[0]) || !isFinite(operands[1])) throw new Error();
+  const calcul = {
+    '>=': function (operands) { return Number(operands[0]) >= Number(operands[1]) },
+    '<=': function (operands) { return Number(operands[0]) <= Number(operands[1]) },
+    '=': function (operands) { return Number(operands[0]) == Number(operands[1]) },
+    '>': function (operands) { return Number(operands[0]) > Number(operands[1]) },
+    '<': function (operands) { return Number(operands[0]) < Number(operands[1]) }
+  };
+  return calcul[operator](operands);
 }
 
 /*
@@ -157,8 +268,22 @@ function calcComparison(expression) {
   { a: 1, b: 2 }, '.c' => exception
 */
 function evalKey(obj, expression) {
-
+  const keysArr = expression.split('.');
+  keysArr.shift();
+  let target;
+  if (obj.hasOwnProperty(keysArr[0])) {
+    target = obj[keysArr[0]];
+  }
+  else throw new Error();
+  for (let i=1; i<keysArr.length; i++) {
+    if (target.hasOwnProperty(keysArr[i])) {
+      target = target[keysArr[i]];
+    }
+    else throw new Error();
+  }
+  return target;
 }
+
 
 export default {
   getDataType,

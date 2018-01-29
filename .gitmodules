@@ -1,0 +1,6 @@
+[submodule "__tests__"]
+	path = __tests__
+	url = https://github.com/roma-derski/gl-jsprocamp-homework.git
+[submodule "_test_"]
+	path = _test_
+	url = https://github.com/vladkampov/gl-jsprocamp-tests
