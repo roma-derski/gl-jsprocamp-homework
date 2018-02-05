@@ -32,14 +32,11 @@ export function bindContext(fn, context, ...rest) {
   Take to account, that you should track log call index starting from 1
 */
 export function addLogCapability(object) {
-  (() => {
     let counter = 1;
     if (object.hasOwnProperty('name')) {
       object.log = () => `Log message #${counter++}: my name is ${object.name}`;
     }
     else object.log = () => `Log message #${counter++}: I dont have name`;
-  })();
-  return;
 }
 
 /*
