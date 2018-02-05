@@ -56,13 +56,14 @@ export function logger(topic) {
 /*
   Implement left to right compose function
 */
-export function compose() {
-  const args = Array.prototype.slice.call(arguments);
-  const composed = function(...rest) {
-    const texts = args.reduceRight((a,b) => a('').concat(b('')) );
-    return texts.concat(rest);
+export function compose () {
+  var funcs = Array.prototype.slice.call(arguments);
+  return function (pipedArg) {
+    for (let i = 0; i < funcs.length; i++) {
+      pipedArg = funcs[i].call(this, pipedArg);
+    }
+    return pipedArg;
   };
-  return composed;
 }
 
 /*
