@@ -11,9 +11,15 @@ export function countOptional(a, b, ...rest) {
   Write your implementation of native Function.prototype.bind method
 */
 export function bindContext(fn, context, ...rest) {
-    return () => {
+    const binded = function() {
       return fn.call(context, ...rest);
     };
+    binded.prototype = undefined;
+    Object.defineProperty(binded, 'length', {
+      writable: false,
+      value: fn.length
+    });
+    return binded;
 }
 
 
@@ -54,7 +60,7 @@ export function logger(topic) {
   Implement left to right compose function
 */
 export function compose () {
-  var funcs = Array.prototype.slice.call(arguments);
+  var funcs = [...arguments];
   return function (pipedArg) {
     for (let i = 0; i < funcs.length; i++) {
       pipedArg = funcs[i].call(this, pipedArg);
