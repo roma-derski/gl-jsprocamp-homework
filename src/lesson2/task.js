@@ -3,7 +3,7 @@
 */
 export function sum(a, b) {
   if (arguments.length !== 2) throw new Error('this function expects exactly TWO arguments');
-  const args = Array.prototype.slice.call(arguments);
+  const args = [...arguments];
   for (let i of args) {
     if (i.constructor.name !== 'Number' || Number.isNaN(i)) return NaN;
   }
@@ -14,7 +14,7 @@ export function sum(a, b) {
   Напишите функцию, которая возвращает сумму всех чисел, что передаются параметрами
 */
 function sumAll() {
-  const args = Array.prototype.slice.call(arguments);
+  const args = [...arguments];
   for (let i of args) {
     if (i.constructor.name !== 'Number' || Number.isNaN(i)) return NaN;
   }
@@ -29,7 +29,7 @@ function sumAll() {
 */
 export function pow(x, n) {
   if (arguments.length !== 2) throw new Error('this function expects exactly TWO arguments');
-  const args = Array.prototype.slice.call(arguments);
+  const args = [...arguments];
   for (let i of args) {
     if (i.constructor.name !== 'Number' || Number.isNaN(i)) return NaN;
   }
@@ -41,7 +41,7 @@ export function pow(x, n) {
 */
 export function random(from, to) {
   if (arguments.length !== 2) throw new Error('this function expects exactly TWO arguments');
-  const args = Array.prototype.slice.call(arguments);
+  const args = [...arguments];
   for (let i of args) {
     if (i.constructor.name !== 'Number' || Number.isNaN(i)) return NaN;
   }
