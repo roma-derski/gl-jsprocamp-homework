@@ -76,9 +76,7 @@ function increase(value) {
 */
 function testForSafeNumber(value) {
   if (arguments.length !== 1 || value.constructor.name !== 'Number') return 'this function expects exactly ONE Number argument';
-  if (isFinite(value)) {
-    return 'safe';
-  }
+  if (isFinite(value)) return 'safe';
   return 'danger';
 }
 
