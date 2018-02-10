@@ -17,24 +17,19 @@ function getDataType(variable) {
 */
 function getDataTypePseudoName(variable) {
   if (arguments.length !== 1) return 'this function expects exactly ONE argument';
-  if (variable && variable.constructor.name) {
+  if ((variable === null) || (variable === undefined)) return 'primitive-special';
     switch (variable.constructor.name) {
       case 'String':
       case 'Number':
       case 'Boolean':
         return 'primitive';
-      
       case 'Object':
         return 'object';
-      
       case 'Array':
         return 'object-array';
-      
       case 'Function':
         return 'object-function';
     }
-  }
-  return 'primitive-special';
 }
 
 
@@ -66,7 +61,8 @@ function compareByType(a, b) {
 */
 function increase(value) {
   if (arguments.length !== 1) return 'this function expects exactly ONE argument';
-  if (value.constructor.name == 'Number' && isFinite(value)) return value+1;
+  const checkForSpecial = (value === null) || (value === undefined);
+  if (!checkForSpecial && value.constructor.name == 'Number' && isFinite(value)) return value+1;
   return -1;  
 }
 
@@ -161,9 +157,7 @@ function order(arr) {
   if (arr.constructor.name !== 'Array' || arr.length === 0) {
     return 'non-empty array is required as argument';
   } 
-  return arr.sort((a,b) => {
-    return a < b;
-  });
+  return arr.sort((a,b) => b-a || a<b);
 }
 
 
@@ -219,8 +213,8 @@ function without(arrA, arrB) {
 */
 function calcExpression(expression) {
   if (!expression) return 'this function expects string of mathematical expression';
-  const re = /\*|\/|\+|\-/;
-  const operator = expression.match(re)[0];
+  const re = /\*|\/|\+|\-$/;
+  const operator = expression.match(re);
   const operands = expression.split(operator);
   if (operands.length !== 2) return 'this function expects string of mathematical expression with 2 operands';
   const calcul = {

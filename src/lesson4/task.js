@@ -20,8 +20,13 @@ export function createSet(arr) {
     }
   };
   
+  function finder(val, i, arr) {
+    const a = this.a;
+    return val === a || Number.isNaN(a) && Number.isNaN(val);
+  }
+  
   MSat.prototype.add = function(a) {
-    const key = this.keys.indexOf(a);
+    const key = this.keys.findIndex(finder, {a});
     if (key !== -1) this.keys[key] = a;
     else this.keys.push(a);
     return this;
@@ -29,13 +34,13 @@ export function createSet(arr) {
   
   
   MSat.prototype.has = function(a) {
-    const key = this.keys.indexOf(a);
+    const key = this.keys.findIndex(finder, {a});
     if (key !== -1) return true;
     return false;
   };
   
   MSat.prototype.delete = function(a) {
-    const key = this.keys.indexOf(a);
+    const key = this.keys.findIndex(finder, {a});
     if (key !== -1) {
       this.keys.splice(key,1);
       return true;
@@ -84,8 +89,13 @@ export function createMap(arr) {
     }
   };
   
+  function finder(val, i, arr) {
+    const a = this.a;
+    return val === a || Number.isNaN(a) && Number.isNaN(val);
+  }
+  
   MMap.prototype.set = function(a,b) {
-    const key = this.keys.indexOf(a);
+    const key = this.keys.findIndex(finder, {a});
     if (key !== -1) this.values[key] = b;
     else {
       this.keys.push(a);
@@ -95,19 +105,19 @@ export function createMap(arr) {
   };
   
   MMap.prototype.get = function(a) {
-    const key = this.keys.indexOf(a);
+    const key = this.keys.findIndex(finder, {a});
     if (key !== -1) return this.values[key];
     return undefined;
   };
   
   MMap.prototype.has = function(a) {
-    const key = this.keys.indexOf(a);
+    const key = this.keys.findIndex(finder, {a});
     if (key !== -1) return true;
     return false;
   };
   
   MMap.prototype.delete = function(a) {
-    const key = this.keys.indexOf(a);
+    const key = this.keys.findIndex(finder, {a});
     if (key !== -1) {
       this.keys.splice(key,1);
       this.values.splice(key,1);
