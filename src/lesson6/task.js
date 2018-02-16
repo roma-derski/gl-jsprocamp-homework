@@ -13,7 +13,7 @@ const getClimate = function(planetName) {
 // Получить информацию (Object) о любом персонаже по имени
 // {name} – String
 const getProfile = function(name) {
-  let request = `https://swapi.co/api/people/?search=${name}`;
+  let request = `https://swapi.co/api/people/?search=Luke Skywalker`;
   let person = fetch(request)
     .then(response => response.json())
     .then(personObj => {
@@ -55,11 +55,31 @@ const getProfile = function(name) {
           .then(data => data.name)
           .catch(err => err);
       })); 
-        
+      
+      // let requestFilms = personObj.results[0].films;
+      // let requestSpecies = personObj.results[0].species;
+      // let requestVehicles = personObj.results[0].vehicles;
+      // let requestStarships = personObj.results[0].starships;
+      // let requestArrs = [];
+      // requestArrs.push(requestFilms, requestSpecies, requestVehicles, requestStarships);
+      // let responseArrs = Promise.all(requestArrs.map(requestArr => {
+      //   return Promise.all(requestArr.map(requestFeature => {
+      //     return fetch(requestFeature)
+      //       .then(response => response.json())
+      //       .then(data => (data.name || data.title))
+      //       .catch(err => err);
+      //   }));
+      // }));
+      
+      // console.log(responseArrs);
+      // [personObj.films, personObj.species, personObj.vehicles, personObj.starships] = responseArrs;
+      // console.log(responseArrs);
+
       return personObj;
     })
     .catch(err => err);
   return person;
+  // console.log(person);
 };
 
 // Получить список пилотов (имена в виде Array of Strings) космического корабля
