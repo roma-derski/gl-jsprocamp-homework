@@ -1,12 +1,4 @@
 
-// helper. May be useful when need to select random monster, if you need it
-
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 const heroClasses = {
 	warrior: { charClass: "Warrior",	life: 30,	damage: 4 },
 	rogue: { charClass: "Rogue", life: 25, damage: 3 },
@@ -20,24 +12,13 @@ const monsterClasses = {
 	holem: { charClass: "Holem", life: 15, damage: 6 }
 };
 
-// function getRandomMonster() {
-//   const monsterIndex = Math.floor(Math.random() * 3);
-//   const monsterClass = ['zombie', 'skeleton', 'holem'][monsterIndex];
-//   return monsterClass;
-// }
-// end of Monsters 
-
 // Hero and Monsters constructors
 const Hero = function(name, charClass) {
   if (heroClasses.hasOwnProperty(charClass)) {
     this.heroName = name;
     Object.assign(this, heroClasses[charClass]);
-    this.getName = function(){
-      return this.heroName;
-    };
-    this.getCharClass = function(){
-      return this.charClass;
-    };
+    this.getName = function(){ return this.heroName; };
+    this.getCharClass = function(){ return this.charClass; };
   }
   else throw new Error("Incorrect character class provided");
 };
@@ -45,12 +26,8 @@ const Hero = function(name, charClass) {
 const Monster = function(charClass) {
   if (monsterClasses.hasOwnProperty(charClass)) {
     Object.assign(this, monsterClasses[charClass]);
-    this.getName = function(){
-      return (`I am ${this.charClass} I don\`t have name`);
-    };
-    this.getCharClass = function(){
-      return this.charClass;
-    };
+    this.getName = function(){ return (`I am ${this.charClass} I don\`t have name`); };
+    this.getCharClass = function(){ return this.charClass; };
   }
   else throw new Error("Incorrect character class provided");
 };
@@ -74,6 +51,9 @@ Monster.prototype.attack = function(enemy) {
     }
   };  
 
+// GENERAL_ATTACK_MESSAGE
+//    "CHARACTER_CLASS killed" - this action will kill target
+//    "done AMOUNT_OF_DAMAGE damage to CHARACTER_CLASS";
 
 const statuses = {
 	idle      : "Idle",
@@ -83,22 +63,20 @@ const statuses = {
 
 const Game = function() {
   this.monsters = [];
-  this.lives = 0;
   this.status = statuses.idle;
 };
 
+Object.defineProperty(Game.prototype, 'lives', {
+  get: function() {
+    return this.monsters[0].life + this.monsters[1].life;
+  }
+});
+
 Game.prototype.addHero = function(hero) {
-  console.log(hero);
   const heroId = hero.charClass.toLowerCase();
-  if (!heroClasses.hasOwnProperty(heroId)) {
-    throw new Error ("Only hero instance can be hero");
-  }
-  else if (this.hero) {
-    throw new Error ("Only one hero can exist");
-  }
+  if (!heroClasses.hasOwnProperty(heroId)) throw new Error ("Only hero instance can be hero");
+  else if (this.hero) throw new Error ("Only one hero can exist");
   else {
-    // const heroName = prompt('Name your Hero:', 'Chuck Norris');
-    // const heroClass = prompt('What is your Hero?', 'warrior|rogue|sorcerer');
     this.hero = hero;
     return ("Hero created, welcome %s", this.hero.heroName);
   }
@@ -115,7 +93,6 @@ Game.prototype.addMonster = function(monster) {
   }
   else { 
     this.monsters.push(monster);
-    this.lives += monster.life;
     return (`Monster Created, ${monster.charClass} appeared in the world`);
   }
 };
@@ -128,19 +105,71 @@ Game.prototype.beginJourney = function() {
   throw new Error ("Cannot start journey, populate the world with hero and monsters first");
 };
 
-Game.prototype.fight = function() {
-  if (this.status !== statuses.progress) throw new Error("Begin your journey to start fighting monsters");
-  // if (enemy.life === 0) return "Monster win";
-  // else if (game.lives === 0) return "Hero win";
+Game.prototype.finishJourney = function() {
+  if (this.hero.life === 0) {
+    this.status = statuses.finished;
+    return "The Game is finished. Hero is dead :(";
+  }
+  else if (this.monsters[0].life + this.monsters[1].life === 0) {
+    return "The Game is finished. Monsters are dead. Congratulations";
+  }
+  else return "Don`t stop. Some monsters are still alive. Kill`em all";
 };
 
-
+Game.prototype.fight = function() {
+  if (this.status !== statuses.progress) {
+    throw new Error("Begin your journey to start fighting monsters");
+  }
+  
+  let currentMonster;
+  if (this.monsters[0].life) currentMonster = this.monsters[0];
+  else if (this.monsters[1].life) currentMonster = this.monsters[1];
+  
+  while (this.hero.life && currentMonster.life) {
+    this.hero.attack(currentMonster);
+    if (currentMonster.life) currentMonster.attack(this.hero);
+  }
+  if (!this.hero.life) return "Monster win";
+  else if (!currentMonster.life) return "Hero win";
+};
 
 
 /* Game Population mechanism should go below */
 
+Game.prototype.populate = function() {
+  const heroName = prompt('Name your Hero:', 'Chuck Norris');
+  const heroClass = prompt('What is your Hero?', 'warrior | rogue | sorcerer | random').toLowerCase().trim();
+  if (heroClass === 'random') this.addRandomHero(heroName);
+  else {
+    const theHero = new Hero(heroName, heroClass);
+    this.addHero(theHero);
+  }
+  
+  while (this.monsters.length < 2) {
+    const monsterClass = prompt(`What is your Monster ${this.monsters.length+1}?`, 'zombie | skeleton | holem | random').toLowerCase().trim();
+    if (monsterClass === 'random') this.addRandomMonster();
+    else {
+      const theMonster = new Monster(monsterClass);
+      this.addMonster(theMonster);
+    }
+  }
+};
 
-/* End of your solution for Game Population mechanism */
+Game.prototype.addRandomHero = function(heroName) {
+  const heroIndex = Math.floor(Math.random() * 3);
+  const heroClass = ['warrior', 'rogue', 'sorcerer'][heroIndex];
+  const randomHero = new Hero(heroName, heroClass);
+  this.addHero(randomHero); 
+};
+
+Game.prototype.addRandomMonster = function() {
+  const monsterIndex = Math.floor(Math.random() * 3);
+  const monsterClass = ['zombie', 'skeleton', 'holem'][monsterIndex];
+  const randomMonster = new Monster(monsterClass);
+  this.addMonster(randomMonster); 
+};
+
+/* End of solution for Game Population mechanism */
 
 export default {
   Game,
