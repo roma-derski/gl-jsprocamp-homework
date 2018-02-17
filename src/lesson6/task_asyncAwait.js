@@ -1,12 +1,15 @@
+// Error handling
 // с помощью Fetch API и swapi.co API получить следующие данные
 
 // Климат на любой планете по её имени
 // {planetName} – String
 const getClimate = async function(planetName) {
+  try {
   const request = `https://swapi.co/api/planets/?search=${planetName}`;
   const response = await fetch(request);
   const data = await response.json();
   return data.results[0].climate;
+  } catch (e) { console.error(e) }
 };
 //getClimate('Yavin IV');
 
@@ -14,6 +17,7 @@ const getClimate = async function(planetName) {
 // Получить информацию (Object) о любом персонаже по имени
 // {name} – String
 const getProfile = async function(name) {
+  try {
   const request = `https://swapi.co/api/people/?search=${name}`;
   const response = await fetch(request);
   const personObj = await response.json();
@@ -43,6 +47,8 @@ const getProfile = async function(name) {
   personObj.starships = starshipsData.map(starship => starship.name);       
   
   return personObj;
+  
+  } catch (e) { console.error(e) }
 };
 // getProfile('Luke Skywalker');
 
@@ -50,6 +56,7 @@ const getProfile = async function(name) {
 // по его названию
 // {starshipName} - String
 const getPilots = async (starshipName) => {
+  try {
   const request = `https://swapi.co/api/starships/?search=${starshipName}`;
   const response = await fetch(request);
   const data = await response.json();
@@ -60,6 +67,8 @@ const getPilots = async (starshipName) => {
   const pilots = pilotsData.map(pilot => pilot.name);
   
   return pilots;
+  
+  } catch (e) { console.error(e) }
 };
 //getPilots('Millennium Falcon');
 
