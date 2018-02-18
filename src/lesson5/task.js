@@ -49,7 +49,7 @@ Monster.prototype.attack = function(enemy) {
       if (!enemy.life) return (`${this.charClass} attacked, Hero killed`);
       return (`${this.charClass} attacked, done ${this.damage} damage to ${enemy.charClass}`);
     }
-  };  
+  };
 
 // GENERAL_ATTACK_MESSAGE
 //    "CHARACTER_CLASS killed" - this action will kill target

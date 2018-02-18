@@ -13,7 +13,7 @@ const getClimate = function(planetName) {
 // Получить информацию (Object) о любом персонаже по имени
 // {name} – String
 const getProfile = function(name) {
-  let request = `https://swapi.co/api/people/?search=Luke Skywalker`;
+  let request = `https://swapi.co/api/people/?search=${name}`;
   let person = fetch(request)
     .then(response => response.json())
     .then(personObj => {
